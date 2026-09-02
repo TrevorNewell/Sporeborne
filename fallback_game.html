@@ -189,13 +189,22 @@
   PlayScene.prototype.constructor = PlayScene;
 
   // Same 3-room shape as the real Unreal room sequencer (SporeborneRunManager),
-  // reused here for continuity between the fallback and the capstone build.
+  // reused here for continuity between the fallback and the capstone build, plus
+  // one guardian encounter before the door -- not the actual Gatekeeper fight
+  // (that's real future scope), just a stronger last obstacle for this demo.
   var ROOMS = [
     { name: "Mossy Antechamber", enemyCount: 1, enemySpeed: 85 },
     { name: "Spore Causeway", enemyCount: 2, enemySpeed: 95 },
     { name: "Root Gauntlet", enemyCount: 2, enemySpeed: 110 },
+    { name: "The Warden's Hollow", enemyCount: 1, enemySpeed: 70, boss: true },
   ];
   var ENEMY_HP = 2;
+  var BOSS_HP = 8;
+  var BOSS_RADIUS = 34;
+  var ENEMY_RADIUS = 16;
+
+  var DASH_SPEED = 620;       // up from the original 340
+  var DASH_DURATION = 0.22;   // seconds the burst velocity is held/locked in
 
   PlayScene.prototype.create = function () {
     var g = this.add.graphics();
@@ -227,6 +236,8 @@
     this.hp = 3;
     this.invuln = false;
     this.dodgeCooldown = 0;
+    this.dashTimer = 0;
+    this.dashDir = 1;
     this.attackCooldown = 0;
     this.roomIndex = 0;
     this.enemies = [];
@@ -262,22 +273,53 @@
   PlayScene.prototype.startRoom = function (index) {
     var room = ROOMS[index];
     this.roomIndex = index;
-    this.roomText.setText("the Rootways — " + room.name + "  (" + (index + 1) + "/" + ROOMS.length + ")");
+    var label = room.boss ? room.name + "  —  a guardian blocks the door" : room.name;
+    this.roomText.setText("the Rootways — " + label + "  (" + (index + 1) + "/" + ROOMS.length + ")");
 
-    this.enemies.forEach(function (e) { e.gfx.destroy(); });
+    this.enemies.forEach(function (e) {
+      e.gfx.destroy(); e.barBg.destroy(); e.barFill.destroy();
+      if (e.label) e.label.destroy();
+    });
     this.enemies = [];
 
     var spacing = (W - 200) / Math.max(1, room.enemyCount);
     for (var i = 0; i < room.enemyCount; i++) {
-      var ex = 480 + i * spacing * 0.6;
-      var circle = this.add.circle(ex, GROUND_Y - 12, 16, 0x6fbf73);
+      var ex = room.boss ? 540 : 480 + i * spacing * 0.6;
+      var radius = room.boss ? BOSS_RADIUS : ENEMY_RADIUS;
+      var maxHp = room.boss ? BOSS_HP : ENEMY_HP;
+      var color = room.boss ? 0xb5482f : 0x6fbf73;
+
+      var circle = this.add.circle(ex, GROUND_Y - (radius - 4), radius, color);
       this.physics.add.existing(circle);
       circle.body.setCollideWorldBounds(true);
       circle.body.setGravityY(900);
+      circle.body.setCircle(radius);
       this.physics.add.collider(circle, this.groundRect);
-      this.enemies.push({ gfx: circle, hp: ENEMY_HP, speed: room.enemySpeed });
+
+      var barW = room.boss ? 70 : 32;
+      var barY = circle.y - radius - 12;
+      var barBg = this.add.rectangle(ex, barY, barW, 6, 0x000000, 0.55).setOrigin(0.5);
+      var barFill = this.add.rectangle(ex - barW / 2, barY, barW, 6, room.boss ? 0xe8b84b : 0x6fbf73).setOrigin(0, 0.5);
+
+      var enemyObj = { gfx: circle, hp: maxHp, maxHp: maxHp, speed: room.enemySpeed,
+                        radius: radius, barBg: barBg, barFill: barFill, barW: barW, isBoss: !!room.boss };
+      if (room.boss) {
+        enemyObj.label = this.add.text(ex, barY - 14, "GUARDIAN", {
+          fontFamily: "Manrope, sans-serif", fontSize: "10px", color: "#e8b84b",
+        }).setOrigin(0.5).setAlpha(0.85);
+      }
+      this.enemies.push(enemyObj);
     }
     this.transitioning = false;
+  };
+
+  PlayScene.prototype.updateHealthBars = function () {
+    this.enemies.forEach(function (e) {
+      e.barBg.x = e.gfx.x; e.barBg.y = e.gfx.y - e.radius - 12;
+      e.barFill.x = e.gfx.x - e.barW / 2; e.barFill.y = e.gfx.y - e.radius - 12;
+      e.barFill.width = e.barW * Math.max(0, e.hp / e.maxHp);
+      if (e.label) { e.label.x = e.gfx.x; e.label.y = e.barBg.y - 14; }
+    });
   };
 
   PlayScene.prototype.showBanner = function (title, sub, duration) {
@@ -296,19 +338,25 @@
 
   PlayScene.prototype.completeRun = function () {
     this.runComplete = true;
-    this.enemies.forEach(function (e) { e.gfx.destroy(); });
+    this.enemies.forEach(function (e) {
+      e.gfx.destroy(); e.barBg.destroy(); e.barFill.destroy();
+      if (e.label) e.label.destroy();
+    });
     this.enemies = [];
     this.roomText.setText("the Rootways — cleared");
     this.showBanner(
-      "You've reached the Gatekeeper's door.",
+      "The guardian falls. You've reached the Gatekeeper's door.",
       "Press R to descend again"
     );
   };
 
   PlayScene.prototype.restartRun = function () {
     this.hp = 3;
+    this.dashTimer = 0;
+    this.invuln = false;
     this.player.x = 90; this.player.y = GROUND_Y - 14;
     this.player.body.setVelocity(0, 0);
+    this.player.setFillStyle(0xe8b84b);
     this.runComplete = false;
     this.bannerText.setAlpha(0);
     this.subBannerText.setAlpha(0);
@@ -327,9 +375,19 @@
       return;
     }
 
-    if (this.keys.left.isDown) body.setVelocityX(-speed);
-    else if (this.keys.right.isDown) body.setVelocityX(speed);
-    else body.setVelocityX(0);
+    this.dashTimer = Math.max(0, this.dashTimer - dt);
+    if (this.dashTimer > 0) {
+      // Locked into the dash burst -- normal movement input is ignored so the
+      // dash actually covers real distance instead of being overwritten the
+      // very next frame.
+      body.setVelocityX(this.dashDir * DASH_SPEED);
+    } else if (this.keys.left.isDown) {
+      body.setVelocityX(-speed);
+    } else if (this.keys.right.isDown) {
+      body.setVelocityX(speed);
+    } else {
+      body.setVelocityX(0);
+    }
 
     if (Phaser.Input.Keyboard.JustDown(this.keys.jump) && body.blocked.down) {
       body.setVelocityY(-340);
@@ -339,8 +397,9 @@
     if (Phaser.Input.Keyboard.JustDown(this.keys.dodge) && this.dodgeCooldown <= 0) {
       this.dodgeCooldown = 0.8; // matches the GDD's real dodge cooldown
       this.invuln = true;
-      var dir = this.keys.left.isDown ? -1 : 1;
-      body.setVelocityX(dir * 340);
+      this.dashDir = this.keys.left.isDown ? -1 : (this.keys.right.isDown ? 1 : this.dashDir);
+      this.dashTimer = DASH_DURATION;
+      body.setVelocityX(this.dashDir * DASH_SPEED);
       this.player.setFillStyle(0xffffff);
       var self = this;
       setTimeout(function () { // matches the GDD's real 0.3s i-frame window
@@ -355,7 +414,7 @@
       for (var i = 0; i < this.enemies.length; i++) {
         var e = this.enemies[i];
         var d = Phaser.Math.Distance.Between(this.player.x, this.player.y, e.gfx.x, e.gfx.y);
-        if (d < 60) { this.hitEnemy(e); break; }
+        if (d < 44 + e.radius) { this.hitEnemy(e); break; }
       }
     }
 
@@ -368,10 +427,11 @@
     for (var j = 0; j < this.enemies.length; j++) {
       var en = this.enemies[j];
       var distToPlayer = Phaser.Math.Distance.Between(en.gfx.x, en.gfx.y, this.player.x, this.player.y);
-      if (distToPlayer < 260 && distToPlayer > 30) {
+      var contactRange = en.radius + 14;
+      if (distToPlayer < 260 && distToPlayer > contactRange) {
         var dirToPlayer = this.player.x < en.gfx.x ? -1 : 1;
         en.gfx.body.setVelocityX(dirToPlayer * en.speed);
-      } else if (distToPlayer <= 30) {
+      } else if (distToPlayer <= contactRange) {
         en.gfx.body.setVelocityX(0);
         if (!this.invuln) tookHitThisFrame = true;
       } else {
@@ -380,18 +440,20 @@
     }
     if (tookHitThisFrame) this.takeDamage();
 
+    this.updateHealthBars();
     this.statusText.setText("HP " + "♥".repeat(Math.max(0, this.hp)));
   };
 
   PlayScene.prototype.hitEnemy = function (enemy) {
     enemy.hp -= 1;
-    enemy.gfx.setFillStyle(0xb5482f);
-    var self = this;
+    var restoreColor = enemy.isBoss ? 0xb5482f : 0x6fbf73;
+    enemy.gfx.setFillStyle(0xffffff);
     setTimeout(function () {
-      if (enemy.hp > 0) enemy.gfx.setFillStyle(0x6fbf73);
+      if (enemy.hp > 0) enemy.gfx.setFillStyle(restoreColor);
     }, 100);
     if (enemy.hp <= 0) {
-      enemy.gfx.destroy();
+      enemy.gfx.destroy(); enemy.barBg.destroy(); enemy.barFill.destroy();
+      if (enemy.label) enemy.label.destroy();
       this.enemies = this.enemies.filter(function (e) { return e !== enemy; });
       if (this.enemies.length === 0 && !this.transitioning) this.onRoomCleared();
     }
@@ -409,8 +471,9 @@
   };
 
   PlayScene.prototype.takeDamage = function () {
-    if (this.invuln || this.hurtCooldown > this.time.now) return;
-    this.hurtCooldown = this.time.now + 800;
+    var now = performance.now();
+    if (this.invuln || this.hurtCooldown > now) return;
+    this.hurtCooldown = now + 800;
     this.hp -= 1;
     this.cameras.main.shake(120, 0.006);
     if (this.hp <= 0) {
@@ -435,22 +498,32 @@
     // Defensive: some embedding contexts don't reliably drive Phaser's own
     // internal Scene.update() tick (observed during testing -- the RAF loop
     // itself runs fine, physics steps, but scene.update() is never invoked).
-    // Belt-and-suspenders: also step it ourselves every frame. If Phaser's
-    // own call is working, this just means update() runs twice with the same
-    // (time, delta) very close together, which is harmless here -- movement,
-    // dodge/attack cooldowns, and damage timers are all still correct either
-    // way since they're driven by real elapsed delta, not a call counter.
+    // Belt-and-suspenders: also step it ourselves. If Phaser's own call is
+    // working, this just means update() runs twice with the same (time,
+    // delta) very close together, harmless here since everything is driven
+    // by real elapsed delta, not a call counter.
+    //
+    // Belt-and-suspenders, squared: a self-chaining requestAnimationFrame chain
+    // was observed during testing to silently stop rescheduling itself under
+    // heavy load in one embedding context, and setInterval alone was observed
+    // heavily throttled in another. Rather than guess which primitive a given
+    // viewer's browser will treat well, run both independently, both driving
+    // the same idempotent step function -- calling update() twice back-to-back
+    // with a tiny/zero elapsed delta is harmless (nothing here depends on a
+    // call counter, only on real elapsed time), so redundancy costs nothing
+    // and covers whichever primitive actually behaves in a given browser.
     var lastTime = performance.now();
-    function manualTick(now) {
+    function stepScene() {
+      var now = performance.now();
       var scene = game.scene.isActive("play") ? game.scene.getScene("play") : null;
       if (scene && scene.update) {
         var delta = now - lastTime;
         try { scene.update(now, delta); } catch (e) { /* Phaser's own loop may already be handling it */ }
       }
       lastTime = now;
-      requestAnimationFrame(manualTick);
     }
-    requestAnimationFrame(manualTick);
+    (function rafLoop() { stepScene(); requestAnimationFrame(rafLoop); })();
+    setInterval(stepScene, 16);
   }
   // Artifacts/embedded pages can finish loading before this script attaches its
   // listener, so "load" may never fire again -- boot immediately if already loaded.
