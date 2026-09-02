@@ -1,0 +1,35 @@
+{
+  "zone": "rootways",
+  "rules": [
+    {
+      "id": "hazard_vocab",
+      "applies_to": "room",
+      "check": "every hazard tag on the room must appear in design/zone_theme_rootways.json:hazard_vocabulary"
+    },
+    {
+      "id": "telegraph_floor",
+      "applies_to": "enemy",
+      "check": "attack_pattern.telegraph_seconds must be >= difficulty_band.telegraph_seconds_floor"
+    },
+    {
+      "id": "enemy_fits_room",
+      "applies_to": "enemy",
+      "check": "every enemy's fits_hazard_tags must intersect the room's hazards"
+    },
+    {
+      "id": "mythic_curse",
+      "applies_to": "spore",
+      "check": "if rarity == mythic, curse must be non-null"
+    },
+    {
+      "id": "curve_tolerance",
+      "applies_to": "curve",
+      "check": "projected_boss_door_dps_multiple must be within [target_boss_door_dps_multiple_min, target_boss_door_dps_multiple_max]"
+    },
+    {
+      "id": "no_duplicate_ids",
+      "applies_to": "all",
+      "check": "room_id, enemy_id values must be unique within the package"
+    }
+  ]
+}

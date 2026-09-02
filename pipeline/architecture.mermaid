@@ -1,0 +1,21 @@
+graph TD
+    H[Human: zone theme<br/>+ difficulty band]:::human
+
+    H --> RS[Roomsmith<br/>authors room template + hazards]:::agent
+    RS -->|room.json: hazards,<br/>spawn_table, notes_for_bestiary| BE[Bestiary<br/>writes enemies fitting the room]:::agent
+    RS -->|room.json| CW[Curvewright<br/>projects power curve]:::agent
+    BE -->|enemies.json: stats,<br/>telegraph timing| CW
+    RS -->|room.json| DV[Data Validator<br/>rule-set enforcement]:::agent
+    BE -->|enemies.json| DV
+    CW -->|curve.json: projected<br/>boss-door DPS multiple| DV
+    RULES[(Human-owned<br/>rules_rootways.json)]:::human -.-> DV
+
+    DV -->|PASS| OUT[/Game-ready package<br/>room + enemies + curve/]:::output
+    DV -->|FAIL: flagged rows<br/>+ reason + origin| RETRY{Retries<br/>left?}:::gate
+    RETRY -->|yes, max 2| RS
+    RETRY -->|no| ESC[Escalate to human]:::human
+
+    classDef agent fill:#2E5E3E,color:#ffffff,stroke:#1d3d28,stroke-width:1px;
+    classDef human fill:#EAF3EC,color:#2E5E3E,stroke:#2E5E3E,stroke-width:1px;
+    classDef gate fill:#f5e6c8,color:#5a4520,stroke:#a5813a,stroke-width:1px;
+    classDef output fill:#dfefe4,color:#1d3d28,stroke:#2E5E3E,stroke-width:1px;

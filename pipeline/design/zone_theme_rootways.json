@@ -1,0 +1,8 @@
+{
+  "zone": "rootways",
+  "theme": "Tangled roots and warm rot beneath the Warren; the first signs of the Blight creeping upward through soil and bark.",
+  "hazard_vocabulary": ["root_snare", "rot_pool", "collapsing_platform", "spore_vent"],
+  "boss": "The Gatekeeper - a corrupted warden beetle",
+  "room_type_requested": "combat",
+  "depth_band": 7
+}

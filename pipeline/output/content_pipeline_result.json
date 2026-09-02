@@ -1,0 +1,249 @@
+{
+  "items": [
+    {
+      "content_type": "bestiary_flavor",
+      "generation": {
+        "query": "Blight rotting corrupted twisting root-caverns creatures Eldercap corrupted warden beetle Gatekeeper tone dark underneath cozy",
+        "retrieved_chunks": [
+          {
+            "id": "4 \u00b7 World & Narrative",
+            "score": 0.1172
+          },
+          {
+            "id": "5 \u00b7 Levels & Progression",
+            "score": 0.1124
+          },
+          {
+            "id": "1 \u00b7 Executive Summary",
+            "score": 0.0631
+          }
+        ],
+        "output": {
+          "enemy_id": "rootways_root_lasher_07",
+          "lore_description": "The Blight doesn't just rot roots \u2014 it sets them twitching. A root lasher was once part of the Eldercap's living structure, the same tangle that cradles the Warren above; now it swings blind, slow, and purposeful, like something that has forgotten what it was holding. Grandmother's etchings note the creak before the strike \u2014 she called it 'the wood remembering it had arms.'"
+        },
+        "mode": "live"
+      },
+      "critique": {
+        "query": "rootways_root_lasher_07 The Blight doesn't just rot roots \u2014 it sets them twitching. A root lasher was once part of the Eldercap's living structure, the same tangle that cradles the Warren above; now it swings blind, slow, and purposeful, like something that has forgotten what it was holding. Grandmother's etchings note the creak before the strike \u2014 she called it 'the wood remembering it had arms.'",
+        "retrieved_chunks": [
+          {
+            "id": "4 \u00b7 World & Narrative",
+            "score": 0.2867
+          },
+          {
+            "id": "1 \u00b7 Executive Summary",
+            "score": 0.1989
+          },
+          {
+            "id": "5 \u00b7 Levels & Progression",
+            "score": 0.1904
+          }
+        ],
+        "output": {
+          "verdict": "FAIL",
+          "issues": [
+            {
+              "type": "lore_break",
+              "found": "Grandmother's etchings note the creak before the strike",
+              "explanation": "The GDD (\u00a74 \u00b7 World & Narrative) establishes that the spore-etchings are lore notes left by grandmother that surface one per run, always slightly deeper than the last \u2014 they are a structured narrative drip-feed tracking her descent. Presenting a specific etching as casual flavor-text embedded in a bestiary entry misrepresents the mechanic: etchings are not incidental field notes scattered across enemy descriptions, they are the primary story-delivery vehicle with their own pacing system. Borrowing grandmother's voice here dilutes and undermines that system. The bestiary should evoke her presence through other means (player-character inference, in-world observation) without colonizing the etching format."
+            },
+            {
+              "type": "tone_drift",
+              "found": "swings blind, slow, and purposeful, like something that has forgotten what it was holding",
+              "explanation": "This phrasing is not wrong in tone, but 'like something that has forgotten what it was holding' edges toward wistful literary abstraction \u2014 the kind of generic melancholy that could appear in any dark fantasy bestiary. Sporeborne's voice per the GDD pillars (\u00a71: 'Cute on the surface, dark underneath'; 'Cozy above, deadly below') is dry and specific, not elegiac. The correction grounds the same beat in a concrete, observable detail rather than a poetic metaphor."
+            }
+          ],
+          "corrected_output": {
+            "enemy_id": "rootways_root_lasher_07",
+            "lore_description": "The Blight doesn't just rot roots \u2014 it sets them twitching. A root lasher was once part of the Eldercap's living structure, the same tangle that cradles the Warren above; now it swings blind, slow, and purposeful, trailing the torn ends of whatever it used to grip. Somewhere above it, a ceiling socket sits empty. It hasn't noticed."
+          }
+        },
+        "mode": "live"
+      }
+    },
+    {
+      "content_type": "spore_flavor",
+      "generation": {
+        "query": "new spore Ring category triggered effect on-dodge on-kill on-hurt rarity mythic blighted curse naming Cap Gill Ring",
+        "retrieved_chunks": [
+          {
+            "id": "2 \u00b7 Game Mechanics",
+            "score": 0.2631
+          },
+          {
+            "id": "10 \u00b7 Next Phase & Vision (Appendix)",
+            "score": 0.0886
+          },
+          {
+            "id": "3 \u00b7 Heroes",
+            "score": 0.0436
+          }
+        ],
+        "output": {
+          "spore_id": "ring_briarstalk_027",
+          "name": "Briarstalk Ring",
+          "category": "Ring",
+          "rarity": "Rare",
+          "mechanical_effect": "On-dodge: if the player rolls within 1.2 tiles of a hazard (pit edge, spike bed, environmental projectile source), the dodge's invulnerability window is cut to 0.1s and the player is rooted in place for 0.6s immediately after the roll resolves.",
+          "flavor_text": "The mycelium learned the smell of recklessness. It tightens around the ankle before the lesson has to be learned the hard way."
+        },
+        "mode": "live"
+      },
+      "critique": {
+        "query": "ring_briarstalk_027 Briarstalk Ring Ring Rare On-dodge: if the player rolls within 1.2 tiles of a hazard (pit edge, spike bed, environmental projectile source), the dodge's invulnerability window is cut to 0.1s and the player is rooted in place for 0.6s immediately after the roll resolves. The mycelium learned the smell of recklessness. It tightens around the ankle before the lesson has to be learned the hard way.",
+        "retrieved_chunks": [
+          {
+            "id": "1 \u00b7 Executive Summary",
+            "score": 0.2547
+          },
+          {
+            "id": "2 \u00b7 Game Mechanics",
+            "score": 0.2526
+          },
+          {
+            "id": "7 \u00b7 Production Plan & Scope",
+            "score": 0.2416
+          }
+        ],
+        "output": {
+          "verdict": "PASS",
+          "issues": [],
+          "corrected_output": null
+        },
+        "mode": "live"
+      }
+    },
+    {
+      "content_type": "warren_dialogue",
+      "generation": {
+        "query": "Snail shop Warren hub NPC dialogue between-run cozy warm rescued critters Gold Bloom currency storytelling drip-feed",
+        "retrieved_chunks": [
+          {
+            "id": "4 \u00b7 World & Narrative",
+            "score": 0.2107
+          },
+          {
+            "id": "1 \u00b7 Executive Summary",
+            "score": 0.1124
+          },
+          {
+            "id": "5 \u00b7 Levels & Progression",
+            "score": 0.1091
+          }
+        ],
+        "output": {
+          "npc": "Snail",
+          "trigger": "after depositing Bloom for the first time",
+          "lines": [
+            "Bloom! Haven't seen proper Bloom in\u2026 oh, longer than I care to count. You brought that up from the roots yourself?",
+            "I keep my gold for the shop and my feelings to myself, but \u2014 that's something, Morel. That's really something.",
+            "Beetle will know what to do with it. I just sell things. Remarkably good things, mind you."
+          ]
+        },
+        "mode": "live"
+      },
+      "critique": {
+        "query": "Snail after depositing Bloom for the first time Bloom! Haven't seen proper Bloom in\u2026 oh, longer than I care to count. You brought that up from the roots yourself? I keep my gold for the shop and my feelings to myself, but \u2014 that's something, Morel. That's really something. Beetle will know what to do with it. I just sell things. Remarkably good things, mind you.",
+        "retrieved_chunks": [
+          {
+            "id": "4 \u00b7 World & Narrative",
+            "score": 0.1631
+          },
+          {
+            "id": "5 \u00b7 Levels & Progression",
+            "score": 0.1623
+          },
+          {
+            "id": "1 \u00b7 Executive Summary",
+            "score": 0.1479
+          }
+        ],
+        "output": {
+          "verdict": "FAIL",
+          "issues": [
+            {
+              "type": "lore_break",
+              "found": "I keep my gold for the shop and my feelings to myself",
+              "explanation": "Per GDD \u00a75, Gold is an in-run currency spent at Snail's shop and lost on death \u2014 Snail does not 'keep' gold in any persistent sense. Bloom is the persistent meta-currency spent at Beetle's Spore Archive, not gold. The line implies Snail personally hoards gold, which misrepresents the currency separation and Snail's role. More critically, the framing muddles which currency the player just deposited: the trigger is 'after depositing Bloom for the first time,' so Snail referencing gold here creates confusion about whether Bloom or gold is the notable thing. The line needs to cleanly acknowledge the correct currency dynamic."
+            },
+            {
+              "type": "lore_break",
+              "found": "Beetle will know what to do with it.",
+              "explanation": "GDD \u00a75 explicitly states Bloom is spent at Beetle's Spore Archive for meta-progression (unlocking spores, perks, starting boons). The line is directionally correct but vague in a way that undersells the established specificity of Beetle's role. However, this is a borderline case \u2014 the line isn't factually wrong, just imprecise. Flagged in the interest of tightening against the GDD rather than issuing a hard fail on this alone."
+            },
+            {
+              "type": "tone_drift",
+              "found": "That's something, Morel. That's really something.",
+              "explanation": "The GDD design pillar is 'cozy above, deadly below' with a dry, specific voice. 'That's really something' is a generic, vague affirmation that reads as filler \u2014 the kind of line that could appear in any cozy game. Sporeborne's established tone is dry and particular; emotional beats should be grounded in specific detail rather than a repeated filler affirmation. The line also risks veering into unearned warmth that feels soft rather than the understated, dry register the GDD implies."
+            }
+          ],
+          "corrected_output": {
+            "npc": "Snail",
+            "trigger": "after depositing Bloom for the first time",
+            "lines": [
+              "Bloom! Haven't seen proper Bloom in\u2026 oh, longer than I care to count. You brought that up from the roots yourself?",
+              "I keep my feelings where I keep my shop stock \u2014 well-organized and mostly out of sight. But I'll say it once: that matters.",
+              "Beetle's the one to bring it to. She'll open the Archive for it. I just sell things. Remarkably good things, mind you."
+            ]
+          }
+        },
+        "mode": "live"
+      }
+    }
+  ],
+  "real_cost_analysis": {
+    "total_input_tokens": 11529,
+    "total_output_tokens": 1674,
+    "total_cache_creation_tokens": 0,
+    "total_cache_read_tokens": 0,
+    "input_cost_usd": 0.034587,
+    "output_cost_usd": 0.02511,
+    "total_cost_usd": 0.059697,
+    "call_count": 6,
+    "calls": [
+      {
+        "label": "",
+        "input": 1769,
+        "output": 133,
+        "cache_creation": 0,
+        "cache_read": 0
+      },
+      {
+        "label": "",
+        "input": 1469,
+        "output": 175,
+        "cache_creation": 0,
+        "cache_read": 0
+      },
+      {
+        "label": "",
+        "input": 1768,
+        "output": 138,
+        "cache_creation": 0,
+        "cache_read": 0
+      },
+      {
+        "label": "",
+        "input": 1981,
+        "output": 513,
+        "cache_creation": 0,
+        "cache_read": 0
+      },
+      {
+        "label": "",
+        "input": 2558,
+        "output": 35,
+        "cache_creation": 0,
+        "cache_read": 0
+      },
+      {
+        "label": "",
+        "input": 1984,
+        "output": 680,
+        "cache_creation": 0,
+        "cache_read": 0
+      }
+    ]
+  }
+}

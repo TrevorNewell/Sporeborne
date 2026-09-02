@@ -1,0 +1,111 @@
+{
+  "room": {
+    "room_id": "rootways_combat_07",
+    "zone": "rootways",
+    "type": "combat",
+    "depth_band": 7,
+    "layout_summary": "A long root-choked corridor opening into a sunken chamber; a collapsed bridge forces a drop into the lower tier, where collapsing_platform lines the far wall and root_snare pools near center.",
+    "hazards": [
+      "collapsing_platform",
+      "root_snare"
+    ],
+    "spawn_table": [
+      {
+        "enemy_slot": "primary",
+        "weight": 0.6,
+        "count_range": [
+          2,
+          3
+        ]
+      },
+      {
+        "enemy_slot": "secondary",
+        "weight": 0.4,
+        "count_range": [
+          1,
+          2
+        ]
+      }
+    ],
+    "notes_for_bestiary": "Arena favors ranged harassment near the root_snare and a melee presence guarding the collapsing_platform choke point."
+  },
+  "enemies": {
+    "zone": "rootways",
+    "room_id": "rootways_combat_07",
+    "enemies": [
+      {
+        "enemy_id": "rootways_root_lasher_07",
+        "role": "primary",
+        "hp": 48,
+        "damage": 8,
+        "attack_pattern": {
+          "type": "arc",
+          "telegraph_seconds": 0.4,
+          "description": "slow root-whip arc, readable wind-up before the swing"
+        },
+        "spawn_weight": 0.6,
+        "fits_hazard_tags": [
+          "collapsing_platform"
+        ]
+      },
+      {
+        "enemy_id": "rootways_spore_gnat_07",
+        "role": "secondary",
+        "hp": 24,
+        "damage": 6,
+        "attack_pattern": {
+          "type": "aimed_volley",
+          "telegraph_seconds": 0.45,
+          "description": "hovers near the hazard pool, fires a single slow aimed spore"
+        },
+        "spawn_weight": 0.4,
+        "fits_hazard_tags": [
+          "root_snare"
+        ]
+      }
+    ]
+  },
+  "curve": {
+    "zone": "rootways",
+    "room_id": "rootways_combat_07",
+    "projected_boss_door_dps_multiple": 4.0,
+    "flagged_outliers": [],
+    "reasoning": "Projected multiple 4.0x derived from target growth 15%/room at depth 7, clamped to the human-owned tolerance band."
+  },
+  "validation_report": {
+    "zone": "rootways",
+    "room_id": "rootways_combat_07",
+    "status": "PASS",
+    "passes": [
+      {
+        "rule": "hazard_vocab",
+        "item": "rootways_combat_07"
+      },
+      {
+        "rule": "telegraph_floor",
+        "item": "rootways_root_lasher_07"
+      },
+      {
+        "rule": "enemy_fits_room",
+        "item": "rootways_root_lasher_07"
+      },
+      {
+        "rule": "telegraph_floor",
+        "item": "rootways_spore_gnat_07"
+      },
+      {
+        "rule": "enemy_fits_room",
+        "item": "rootways_spore_gnat_07"
+      },
+      {
+        "rule": "curve_tolerance",
+        "item": "rootways_combat_07"
+      },
+      {
+        "rule": "no_duplicate_ids",
+        "item": "rootways_combat_07"
+      }
+    ],
+    "failures": []
+  }
+}

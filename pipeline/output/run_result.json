@@ -1,0 +1,175 @@
+{
+  "status": "PASS",
+  "reason": "",
+  "timestamp": "2026-08-19T04:59:39.269678+00:00",
+  "run_log": [
+    {
+      "agent": "roomsmith",
+      "attempt": 1,
+      "ok": true,
+      "mode": "live"
+    },
+    {
+      "agent": "bestiary",
+      "attempt": 1,
+      "ok": true,
+      "mode": "live"
+    },
+    {
+      "agent": "curvewright",
+      "attempt": 1,
+      "ok": true,
+      "mode": "live"
+    },
+    {
+      "agent": "data_validator",
+      "attempt": 1,
+      "ok": true,
+      "mode": "deterministic"
+    }
+  ],
+  "package": {
+    "room": {
+      "room_id": "warren_blight_creep_001",
+      "zone": "The Warren \u2014 Underbelly",
+      "type": "combat",
+      "depth_band": 7,
+      "layout_summary": "A wide, low-ceilinged burrow chamber roughly 22x14 tiles. The floor is uneven, divided into three raised root-platform tiers running left-to-right, each tier separated by narrow gaps above shallow rot-pool trenches. The leftmost tier is the entry point and the most stable. The central tier is the largest fighting ground but is honeycombed with spore vents clustered near its midpoint. The rightmost tier is the smallest and partially collapsed, with one collapsing_platform segment that gives way after roughly 2 seconds of player weight. Thick gnarled root columns descend from the ceiling at irregular intervals, providing partial cover but also anchoring root_snare trigger zones at floor level around their bases. Dim bioluminescent fungal patches on the ceiling provide low ambient light with no bright spots, rewarding enemy ambush approaches from the darker right flank.",
+      "hazards": [
+        "root_snare",
+        "rot_pool",
+        "collapsing_platform",
+        "spore_vent"
+      ],
+      "spawn_table": [
+        {
+          "enemy_slot": "blight_grub_swarm",
+          "weight": 0.4,
+          "count_range": [
+            3,
+            6
+          ]
+        },
+        {
+          "enemy_slot": "rot_tender",
+          "weight": 0.3,
+          "count_range": [
+            1,
+            2
+          ]
+        },
+        {
+          "enemy_slot": "warren_burrower",
+          "weight": 0.2,
+          "count_range": [
+            1,
+            2
+          ]
+        },
+        {
+          "enemy_slot": "spore_herald",
+          "weight": 0.1,
+          "count_range": [
+            1,
+            1
+          ]
+        }
+      ],
+      "notes_for_bestiary": "The rot_tender should be scripted to actively reposition near spore_vent clusters, using the rising spore clouds as suppression cover while it channels its rot-pool expansion ability \u2014 designers should ensure the spore_herald spawns on the rightmost collapsing tier to force players onto unstable ground when prioritizing the highest-threat target. Blight grubs funnel naturally through root_snare zones if spawned from the ceiling-root anchor points; this creates a pincer dynamic when the warren_burrower emerges from beneath the central tier floor. Consider flagging this room for a first-occurrence Blight-status debuff tutorial if the player has not yet encountered rot_pool damage in earlier depth bands."
+    },
+    "enemies": {
+      "zone": "The Warren \u2014 Underbelly",
+      "room_id": "warren_blight_creep_001",
+      "enemies": [
+        {
+          "enemy_id": "rot_tender",
+          "role": "primary",
+          "hp": 340,
+          "damage": 28,
+          "attack_pattern": {
+            "type": "rot_pool_expansion_channeled",
+            "telegraph_seconds": 1.2,
+            "description": "The rot_tender waddles toward the nearest active spore_vent cluster and begins a 1.2-second root-planting animation, arms sinking into the floor. On completion it vomits a spreading rot_pool radial that expands outward at 1.8 units per second for 4 seconds, dealing 12 damage per second to any player standing in it. The rising spore cloud from the adjacent vent obscures the pool's edge glow, making the boundary harder to read. If interrupted before the channel completes, the pool spawns at half radius. The rot_tender actively repositions between vent clusters every 8\u201312 seconds when not channeling, prioritizing whichever vent has the densest spore upwelling."
+          },
+          "spawn_weight": 0.72,
+          "fits_hazard_tags": [
+            "rot_pool",
+            "spore_vent"
+          ]
+        },
+        {
+          "enemy_id": "spore_herald",
+          "role": "secondary",
+          "hp": 210,
+          "damage": 19,
+          "attack_pattern": {
+            "type": "spore_burst_suppression",
+            "telegraph_seconds": 0.85,
+            "description": "The spore_herald spawns anchored to the rightmost collapsing tier and begins a 0.85-second posture flare \u2014 frills extending and sac distending visibly \u2014 before launching a targeted spore_burst projectile that applies Blight status on hit for 6 seconds. On reaching 50% HP it triggers a passive platform-shake aura that accelerates the collapse timer of its current tier by 40%, forcing players who engage it in place to scramble. It periodically emits a slow-drift spore cloud passively every 10 seconds regardless of its main attack cooldown, which lingers in the spore_vent updrafts and can be carried laterally across adjacent tiers."
+          },
+          "spawn_weight": 0.58,
+          "fits_hazard_tags": [
+            "collapsing_platform",
+            "spore_vent"
+          ]
+        }
+      ]
+    },
+    "curve": {
+      "zone": "The Warren \u2014 Underbelly",
+      "room_id": "warren_blight_creep_001",
+      "projected_boss_door_dps_multiple": 4.6,
+      "flagged_outliers": [
+        {
+          "item_id": "spore_herald",
+          "issue": "Telegraph of 0.85s is above the band floor (0.35s) but the combination of rightmost collapsing-tier forced engagement, 40% accelerated collapse aura at 50% HP, and passive lingering spore cloud drifting laterally creates compounding pressure that functionally compresses effective dodge windows below what the raw telegraph figure implies. In a room where the player is already managing rot_pool edge blur, root_snare zones, and blight_grub funneling, the spore_herald's simultaneous platform destabilisation may produce difficulty spikes inconsistent with depth_band 7 pacing. Recommend either removing the collapse-acceleration aura or delaying it to 30% HP, or relocating the herald's anchor point to the central tier so the collapsing platform remains an optional pressure element rather than a mandatory engagement surface."
+        },
+        {
+          "item_id": "rot_tender",
+          "issue": "The rot_pool_expansion_channeled attack is rated at 12 DPS to the player inside the pool, sustained for up to 4 seconds per cast, with edge glow obscured by spore_vent clouds. At depth_band 7 the obscured boundary is a compounding readability issue on top of low ambient bioluminescent lighting. If two rot_tenders spawn simultaneously (count_range [1,2] at weight 0.3) and stagger their channel timings, overlapping pools with unreadable edges could produce unavoidable damage windows, particularly on the central tier where spore vents are densest. Recommend scripting a minimum 6-second stagger between rot_tender channel initiations when two are present, or capping simultaneous active rot_pools at one per tier."
+        },
+        {
+          "item_id": "blight_grub_swarm",
+          "issue": "Count range [3,6] with spawn weight 0.4 and ceiling-root anchor spawning into root_snare trigger zones creates a high-density low-HP attrition layer. At the upper bound (6 grubs) combined with max rot_tender count and spore_herald, the aggregate DPS floor against a stationary player is significantly elevated. The pincer dynamic with warren_burrower emergence from below the central tier is intentional and well-designed, but the upper grub count should be gated: recommend capping blight_grub_swarm count at 4 when warren_burrower is also present in the spawn resolution, to avoid triple-vector simultaneous pressure exceeding band ceiling."
+        }
+      ],
+      "reasoning": "Depth-band 7 in the Rootways zone targets a boss-door DPS multiple of [4.0, 5.0], meaning the room's net enemy threat should demand roughly 4\u20135\u00d7 the player's baseline DPS output as an effective sustained pressure budget. I evaluate this room across four axes: raw damage throughput, hazard synergy multipliers, readability tax, and spawn-table variance.\n\n**Raw throughput baseline:** At depth_band 7 with 0.08 HP growth and 0.05 damage growth per room from a nominal band origin, the rot_tender (28 damage, 340 HP) and spore_herald (19 damage, 210 HP) sit comfortably within expected elite-tier envelopes. The rot_tender's channeled pool adds a sustained 12 DPS area layer on top of its direct damage, which I treat as a hazard-DPS contribution rather than direct enemy DPS \u2014 but it still loads the player's dodge budget.\n\n**Spawn-table weighted expectation:** Weighting expected enemy presence: blight_grub_swarm (~4.5 mean count at weight 0.4), rot_tender (~1.5 mean at weight 0.3), warren_burrower (~1.5 mean at weight 0.2), spore_herald (~1.0 at weight 0.1). Aggregating normalized damage values against expected player evasion at this depth, and applying a hazard-synergy multiplier of approximately 1.25\u00d7 for the rot_pool/spore_vent obscuration interaction and 1.1\u00d7 for root_snare mobility tax, the room's effective DPS multiple lands near 4.6\u00d7 \u2014 within band.\n\n**Hazard synergy assessment:** The rot_tender-spore_vent scripted behavior is the room's strongest synergy vector and is well-justified for depth_band 7. The edge-glow obscuration is a meaningful readability challenge but not inherently over-tuned for a single rot_tender. The risk is the dual-tender scenario (flagged above). The spore_herald's collapsing-platform acceleration is the second-strongest synergy vector; it is directionally appropriate but sits at the ceiling of acceptable pressure when stacked with the forced rightmost-tier positioning note in the design brief.\n\n**Telegraph compliance:** All telegraphs (rot_tender 1.2s, spore_herald 0.85s) exceed the band floor of 0.35s. No violations. However, the functional readability of the 0.85s herald telegraph is degraded in the low-light right flank environment, which I note as a soft concern rather than a hard flag.\n\n**Variance risk:** The spawn table can resolve at high-end counts in a way that briefly spikes the effective multiple above 5.0 (upper bound: 6 grubs + 2 rot_tenders + 2 burrowers + 1 herald). The flagged cap on simultaneous blight_grub count and the rot_pool stagger recommendation are the primary levers to keep variance within band without redesigning the room's core identity.\n\n**Conclusion:** Projected multiple of 4.6 is within target. The room is approvable with the three flagged outlier mitigations applied. The first-occurrence Blight-status tutorial note in the room brief is well-placed and adds pedagogical value without difficulty cost."
+    },
+    "validation_report": {
+      "zone": "The Warren \u2014 Underbelly",
+      "room_id": "warren_blight_creep_001",
+      "status": "PASS",
+      "passes": [
+        {
+          "rule": "hazard_vocab",
+          "item": "warren_blight_creep_001"
+        },
+        {
+          "rule": "telegraph_floor",
+          "item": "rot_tender"
+        },
+        {
+          "rule": "enemy_fits_room",
+          "item": "rot_tender"
+        },
+        {
+          "rule": "telegraph_floor",
+          "item": "spore_herald"
+        },
+        {
+          "rule": "enemy_fits_room",
+          "item": "spore_herald"
+        },
+        {
+          "rule": "curve_tolerance",
+          "item": "warren_blight_creep_001"
+        },
+        {
+          "rule": "no_duplicate_ids",
+          "item": "warren_blight_creep_001"
+        }
+      ],
+      "failures": []
+    }
+  }
+}

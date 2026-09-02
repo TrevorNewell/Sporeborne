@@ -1,0 +1,10 @@
+{
+  "zone": "rootways",
+  "enemy_hp_growth_per_room": 0.08,
+  "enemy_damage_growth_per_room": 0.05,
+  "elite_hp_multiplier": 1.4,
+  "target_player_power_growth_per_room": 0.15,
+  "target_boss_door_dps_multiple_min": 4.0,
+  "target_boss_door_dps_multiple_max": 5.0,
+  "telegraph_seconds_floor": 0.35
+}

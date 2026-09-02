@@ -1,0 +1,200 @@
+{
+  "timestamp": "2026-08-19T08:47:53.216057+00:00",
+  "iterations": [
+    {
+      "ranked_candidates": [
+        {
+          "id": "G1-2",
+          "description": "jump",
+          "gate": "G1",
+          "build_state": "missing",
+          "score": 0.75
+        },
+        {
+          "id": "G1-4",
+          "description": "dodge-with-i-frames",
+          "gate": "G1",
+          "build_state": "missing",
+          "score": 0.75
+        },
+        {
+          "id": "G4-3",
+          "description": "boss",
+          "gate": "G4",
+          "build_state": "missing",
+          "score": 0.725
+        },
+        {
+          "id": "G2-2",
+          "description": "telegraphed projectiles",
+          "gate": "G2",
+          "build_state": "missing",
+          "score": 0.6917
+        },
+        {
+          "id": "G1-3",
+          "description": "attack combo",
+          "gate": "G1",
+          "build_state": "partial",
+          "score": 0.67
+        },
+        {
+          "id": "G5-1",
+          "description": "Hub",
+          "gate": "G5",
+          "build_state": "missing",
+          "score": 0.6667
+        },
+        {
+          "id": "G5-3",
+          "description": "save/load",
+          "gate": "G5",
+          "build_state": "missing",
+          "score": 0.6667
+        },
+        {
+          "id": "G4-1",
+          "description": "Procedural room sequencing",
+          "gate": "G4",
+          "build_state": "missing",
+          "score": 0.625
+        },
+        {
+          "id": "G5-2",
+          "description": "Bloom meta-progression",
+          "gate": "G5",
+          "build_state": "missing",
+          "score": 0.6167
+        },
+        {
+          "id": "G2-3",
+          "description": "damage pipeline",
+          "gate": "G2",
+          "build_state": "partial",
+          "score": 0.6117
+        },
+        {
+          "id": "G4-2",
+          "description": "door rewards",
+          "gate": "G4",
+          "build_state": "missing",
+          "score": 0.575
+        },
+        {
+          "id": "G3-1",
+          "description": "Spore DataTable pipeline",
+          "gate": "G3",
+          "build_state": "partial",
+          "score": 0.5533
+        },
+        {
+          "id": "MVP-1",
+          "description": "1 hero (Morel)",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.525
+        },
+        {
+          "id": "MVP-2",
+          "description": "1 zone: ~26 room templates",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.525
+        },
+        {
+          "id": "MVP-6",
+          "description": "Hub: Snail (shop) + Beetle (Archive)",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.525
+        },
+        {
+          "id": "MVP-7",
+          "description": "Bloom meta: 5+ Archive unlocks",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.525
+        },
+        {
+          "id": "MVP-8",
+          "description": "Keyboard + gamepad, remappable",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.525
+        },
+        {
+          "id": "MVP-10",
+          "description": "Save/load",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.525
+        },
+        {
+          "id": "MVP-4",
+          "description": "3 enemy types + 1 boss (Gatekeeper)",
+          "gate": null,
+          "build_state": "partial",
+          "score": 0.445
+        },
+        {
+          "id": "MVP-5",
+          "description": "Win state: defeat the Gatekeeper",
+          "gate": null,
+          "build_state": "partial",
+          "score": 0.445
+        },
+        {
+          "id": "G3-2",
+          "description": "1-of-3 choice UI",
+          "gate": "G3",
+          "build_state": "missing",
+          "score": 0.3833
+        },
+        {
+          "id": "MVP-9",
+          "description": "Main menu, death & victory screens",
+          "gate": null,
+          "build_state": "missing",
+          "score": 0.275
+        },
+        {
+          "id": "G6-1",
+          "description": "Agent content pass to MVP counts",
+          "gate": "G6",
+          "build_state": "missing",
+          "score": 0.2583
+        },
+        {
+          "id": "G6-2",
+          "description": "juice",
+          "gate": "G6",
+          "build_state": "missing",
+          "score": 0.2583
+        },
+        {
+          "id": "G6-3",
+          "description": "playtest",
+          "gate": "G6",
+          "build_state": "missing",
+          "score": 0.2583
+        },
+        {
+          "id": "G6-4",
+          "description": "balance",
+          "gate": "G6",
+          "build_state": "missing",
+          "score": 0.2583
+        },
+        {
+          "id": "G6-5",
+          "description": "bugfix",
+          "gate": "G6",
+          "build_state": "missing",
+          "score": 0.2583
+        }
+      ],
+      "picked": "G1-2"
+    }
+  ],
+  "built_count": 0
+}

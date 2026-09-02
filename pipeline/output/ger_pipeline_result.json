@@ -1,0 +1,148 @@
+{
+  "content_type": "spore_mechanics",
+  "evaluator_rule": {
+    "id": "mythic_curse",
+    "applies_to": "spore",
+    "check": "if rarity == mythic, curse must be non-null"
+  },
+  "items": [
+    {
+      "brief": {
+        "spore_id_hint": "hollow_cap",
+        "category": "Cap",
+        "rarity": "Mythic",
+        "intent": "raw burst damage weapon mutation, Blighted/cursed tier"
+      },
+      "status": "ACCEPTED",
+      "refinements": 1,
+      "final": {
+        "spore_id": "cap_mythic_deathbloom",
+        "name": "Deathbloom Cap",
+        "category": "Cap",
+        "rarity": "Mythic",
+        "mechanical_effect": "Every third hit of your combo detonates in a bloom burst, dealing 400% weapon damage in a point-blank radius. The burst radius and damage scale up by 15% for each consecutive room cleared without taking a hit.",
+        "curse": "triple effect magnitude, but healing is halved",
+        "flavor_text": "It blooms once, perfectly, violently. The mycelium does not waste energy on chance \u2014 only on certainty."
+      },
+      "history": [
+        {
+          "step": "generate",
+          "mode": "live",
+          "output": {
+            "spore_id": "cap_mythic_deathbloom",
+            "name": "Deathbloom Cap",
+            "category": "Cap",
+            "rarity": "Mythic",
+            "mechanical_effect": "Every third hit of your combo detonates in a bloom burst, dealing 400% weapon damage in a point-blank radius. The burst radius and damage scale up by 15% for each consecutive room cleared without taking a hit.",
+            "curse": null,
+            "flavor_text": "It blooms once, perfectly, violently. The mycelium does not waste energy on chance \u2014 only on certainty."
+          },
+          "note": "curse stripped by --inject-break/--force-escalate to force a real failure",
+          "evaluation": {
+            "status": "FAIL",
+            "failures": [
+              {
+                "rule": "mythic_curse",
+                "reason": "rarity is Mythic but curse is missing/empty -- GDD \u00a72: Blighted spores must offer Mythic-tier power with a curse attached"
+              }
+            ]
+          }
+        },
+        {
+          "step": "refine",
+          "attempt": 1,
+          "mode": "simulate",
+          "output": {
+            "spore_id": "cap_mythic_deathbloom",
+            "name": "Deathbloom Cap",
+            "category": "Cap",
+            "rarity": "Mythic",
+            "mechanical_effect": "Every third hit of your combo detonates in a bloom burst, dealing 400% weapon damage in a point-blank radius. The burst radius and damage scale up by 15% for each consecutive room cleared without taking a hit.",
+            "curse": "triple effect magnitude, but healing is halved",
+            "flavor_text": "It blooms once, perfectly, violently. The mycelium does not waste energy on chance \u2014 only on certainty."
+          },
+          "evaluation": {
+            "status": "PASS",
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "brief": {
+        "spore_id_hint": "dryrot_gill",
+        "category": "Gill",
+        "rarity": "Rare",
+        "intent": "passive rule change rewarding igniting enemies"
+      },
+      "status": "ACCEPTED",
+      "refinements": 0,
+      "final": {
+        "spore_id": "gill_rare_cinderveil",
+        "name": "Cinderveil Gill",
+        "category": "Gill",
+        "rarity": "Rare",
+        "mechanical_effect": "While at least one enemy is ignited, your attacks gain +30% damage and your secondary cooldown refreshes 40% faster. This bonus persists for 2 seconds after the last ignited enemy is extinguished or dies, giving a brief grace window to re-ignite.",
+        "curse": null,
+        "flavor_text": "The mycelium learned early: where there is heat, there is hunger. Let something burn, and the veil feeds."
+      },
+      "history": [
+        {
+          "step": "generate",
+          "mode": "live",
+          "output": {
+            "spore_id": "gill_rare_cinderveil",
+            "name": "Cinderveil Gill",
+            "category": "Gill",
+            "rarity": "Rare",
+            "mechanical_effect": "While at least one enemy is ignited, your attacks gain +30% damage and your secondary cooldown refreshes 40% faster. This bonus persists for 2 seconds after the last ignited enemy is extinguished or dies, giving a brief grace window to re-ignite.",
+            "curse": null,
+            "flavor_text": "The mycelium learned early: where there is heat, there is hunger. Let something burn, and the veil feeds."
+          },
+          "evaluation": {
+            "status": "PASS",
+            "failures": []
+          }
+        }
+      ]
+    },
+    {
+      "brief": {
+        "spore_id_hint": "sporecloud_ring",
+        "category": "Ring",
+        "rarity": "Common",
+        "intent": "on-dodge triggered utility effect"
+      },
+      "status": "ACCEPTED",
+      "refinements": 0,
+      "final": {
+        "spore_id": "ring_common_dustpuff_001",
+        "name": "Dustpuff Ring",
+        "category": "Ring",
+        "rarity": "Common",
+        "mechanical_effect": "On dodge, release a brief concussive puff that pushes all nearby enemies 2\u20133 tiles away from Morel's roll endpoint. The knockback is not damaging but interrupts enemy wind-up animations, resetting their attack flash timer.",
+        "curse": null,
+        "flavor_text": "The old wardens knew: half a fight is just buying yourself another breath."
+      },
+      "history": [
+        {
+          "step": "generate",
+          "mode": "live",
+          "output": {
+            "spore_id": "ring_common_dustpuff_001",
+            "name": "Dustpuff Ring",
+            "category": "Ring",
+            "rarity": "Common",
+            "mechanical_effect": "On dodge, release a brief concussive puff that pushes all nearby enemies 2\u20133 tiles away from Morel's roll endpoint. The knockback is not damaging but interrupts enemy wind-up animations, resetting their attack flash timer.",
+            "curse": null,
+            "flavor_text": "The old wardens knew: half a fight is just buying yourself another breath."
+          },
+          "evaluation": {
+            "status": "PASS",
+            "failures": []
+          }
+        }
+      ]
+    }
+  ]
+}
