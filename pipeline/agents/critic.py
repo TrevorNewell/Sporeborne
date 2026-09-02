@@ -89,7 +89,10 @@ class Critic(Agent):
             "corrected version of the JSON with the SAME keys and structure as "
             "the input -- only the flagged text changed, everything else left "
             "as-is -- and explain what you changed and why, citing the GDD "
-            "excerpt that grounds the correction. Output ONLY valid JSON: "
+            "excerpt that grounds the correction. Keep each issue's explanation "
+            "to ONE sentence, max ~25 words -- name the contradiction and the "
+            "GDD section, don't restate the full excerpt or narrate at length. "
+            "Output ONLY valid JSON: "
             '{"verdict": "PASS"|"FAIL", "issues": [{"type": str, "found": str, '
             '"explanation": str}], "corrected_output": <object matching the '
             "input's structure>|null}."
