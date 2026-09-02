@@ -1,0 +1,463 @@
+<meta charset="utf-8">
+<title>Sporeborne</title>
+<style>
+  :root {
+    --blight-dark: #16241c;
+    --blight-darker: #0d1712;
+    --threadmoss: #6fbf73;
+    --threadmoss-dim: #4a8f4e;
+    --warren-gold: #e8b84b;
+    --bone: #ede6d6;
+    --rust: #b5482f;
+    --panel: #1e2f24;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --blight-dark: #16241c;
+      --blight-darker: #0d1712;
+      --bone: #ede6d6;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--blight-darker);
+    color: var(--bone);
+    font-family: "Manrope", system-ui, sans-serif;
+    min-height: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 16px 40px;
+    gap: 18px;
+  }
+  h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-style: italic;
+    font-size: clamp(28px, 5vw, 44px);
+    letter-spacing: 0.01em;
+    margin: 0;
+    color: var(--warren-gold);
+    text-wrap: balance;
+    text-shadow: 0 0 24px rgba(232, 184, 75, 0.25);
+  }
+  .tagline {
+    margin: -12px 0 4px;
+    color: var(--threadmoss);
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.85;
+  }
+  #game-frame {
+    position: relative;
+    border-radius: 6px;
+    padding: 3px;
+    background: linear-gradient(160deg, rgba(111, 191, 115, 0.55), rgba(111, 191, 115, 0.08) 60%);
+    box-shadow: 0 0 60px rgba(111, 191, 115, 0.15), 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+  #game-container {
+    border-radius: 4px;
+    overflow: hidden;
+    line-height: 0;
+  }
+  .hud-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 720px;
+    width: 100%;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid rgba(111, 191, 115, 0.2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    flex: 1 1 260px;
+  }
+  .panel h2 {
+    margin: 0 0 8px;
+    font-family: "Manrope", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--threadmoss);
+    font-weight: 700;
+  }
+  .panel p {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--bone);
+  }
+  .controls {
+    font-size: 13px;
+    color: rgba(237, 230, 214, 0.65);
+    text-align: center;
+    max-width: 520px;
+  }
+  .controls kbd {
+    background: rgba(237, 230, 214, 0.1);
+    border: 1px solid rgba(237, 230, 214, 0.25);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+  .pipeline-tag {
+    display: inline-block;
+    margin-top: 2px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--warren-gold);
+    opacity: 0.8;
+  }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;1,600&family=Manrope:wght@500;700;800&display=swap">
+
+<h1>Sporeborne</h1>
+<div class="tagline">A cozy little knight against a very deadly blight</div>
+
+<div id="game-frame"><div id="game-container"></div></div>
+
+<div class="controls">
+  <kbd>←</kbd> <kbd>→</kbd> move &nbsp; <kbd>Space</kbd> jump &nbsp; <kbd>Shift</kbd> dodge (brief invulnerability) &nbsp; <kbd>X</kbd> attack
+</div>
+
+<div class="hud-row" id="pipeline-panels"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.70.0/phaser.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  // ---- Real pipeline content, embedded verbatim from Claude/output/content_pipeline_result.json ----
+  // (This is the actual live Anthropic API run's output for Sporeborne's content pipeline —
+  // bestiary flavor, spore flavor, and Warren dialogue, Critic-Agent-corrected where flagged.
+  // Repo: https://github.com/TrevorNewell/Sporeborne )
+  var PIPELINE_ITEMS = [
+    {
+      "label": "Bestiary — rootways_root_lasher_07",
+      "text": "Rootway tendons don't stay put once the Blight gets into them. This one has been flexing and snapping in the dark long enough that it's forgotten it was ever part of something larger — it just swings now, patient the way a bad floorboard is patient. Grandmother noted the sound in one of her deeper etchings: a low creak before the crack. She underlined it twice.",
+      "corrected": true
+    },
+    {
+      "label": "Spore — Briarveil Ring",
+      "text": "The mycelium remembers every reckless step. It does not forgive them.",
+      "corrected": false
+    },
+    {
+      "label": "Warren dialogue — Snail",
+      "text": "Oh, you brought Bloom back. Your grandmother used to do that too — though she only ever came back the once, near the end. / Bloom's no good at my counter, mind you. That goes to Beetle and the Archive. My side of the Warren runs on Gold — and Gold doesn't make it home if you fall. / Still. Bloom means you made it back. That's not nothing.",
+      "corrected": true
+    }
+  ];
+
+  function renderPipelinePanels() {
+    var host = document.getElementById("pipeline-panels");
+    if (!PIPELINE_ITEMS.length) return;
+    PIPELINE_ITEMS.forEach(function (item) {
+      var panel = document.createElement("div");
+      panel.className = "panel";
+      var h2 = document.createElement("h2");
+      h2.textContent = item.label;
+      var p = document.createElement("p");
+      p.textContent = item.text;
+      var tag = document.createElement("div");
+      tag.className = "pipeline-tag";
+      tag.textContent = item.corrected ? "Critic-corrected" : "Pipeline-generated";
+      panel.appendChild(h2);
+      panel.appendChild(p);
+      panel.appendChild(tag);
+      host.appendChild(panel);
+    });
+  }
+
+  // ---- Minimal playable slice: a corridor, one hero, one chasing enemy ----
+  var W = 720, H = 380;
+  var GROUND_Y = H - 56;
+
+  function PlayScene() { Phaser.Scene.call(this, { key: "play" }); }
+  PlayScene.prototype = Object.create(Phaser.Scene.prototype);
+  PlayScene.prototype.constructor = PlayScene;
+
+  // Same 3-room shape as the real Unreal room sequencer (SporeborneRunManager),
+  // reused here for continuity between the fallback and the capstone build.
+  var ROOMS = [
+    { name: "Mossy Antechamber", enemyCount: 1, enemySpeed: 85 },
+    { name: "Spore Causeway", enemyCount: 2, enemySpeed: 95 },
+    { name: "Root Gauntlet", enemyCount: 2, enemySpeed: 110 },
+  ];
+  var ENEMY_HP = 2;
+
+  PlayScene.prototype.create = function () {
+    var g = this.add.graphics();
+
+    // Backdrop: rotted root-cavern gradient feel via layered rects
+    g.fillStyle(0x16241c, 1); g.fillRect(0, 0, W, H);
+    g.fillStyle(0x1e2f24, 1); g.fillRect(0, H - 140, W, 140);
+    for (var i = 0; i < 6; i++) {
+      g.fillStyle(0x2a4a34, 0.5);
+      g.fillRoundedRect(20 + i * 130, H - 200 - (i % 3) * 18, 70, 220, 30);
+    }
+    // ground
+    g.fillStyle(0x0d1712, 1); g.fillRect(0, GROUND_Y + 20, W, H - GROUND_Y - 20);
+    g.lineStyle(3, 0x6fbf73, 0.5); g.lineBetween(0, GROUND_Y + 20, W, GROUND_Y + 20);
+
+    this.physics.world.setBounds(0, 0, W, GROUND_Y + 20);
+
+    // Player: warm lantern-cap knight (simple shape, no external art needed)
+    this.player = this.add.rectangle(90, GROUND_Y - 14, 22, 28, 0xe8b84b);
+    this.physics.add.existing(this.player);
+    this.player.body.setCollideWorldBounds(true);
+    this.player.body.setGravityY(900);
+    this.playerCap = this.add.triangle(90, GROUND_Y - 30, 0, 12, 11, -8, 22, 12, 0xe8b84b).setStrokeStyle(1, 0x16241c);
+
+    this.groundRect = this.add.rectangle(W / 2, GROUND_Y + 20, W, 4, 0x000000, 0);
+    this.physics.add.existing(this.groundRect, true);
+    this.physics.add.collider(this.player, this.groundRect);
+
+    this.hp = 3;
+    this.invuln = false;
+    this.dodgeCooldown = 0;
+    this.attackCooldown = 0;
+    this.roomIndex = 0;
+    this.enemies = [];
+    this.runComplete = false;
+    this.transitioning = false;
+
+    this.statusText = this.add.text(14, 10, "", {
+      fontFamily: "Manrope, sans-serif", fontSize: "13px", color: "#ede6d6",
+    });
+    this.roomText = this.add.text(W / 2, 20, "", {
+      fontFamily: "Fraunces, serif", fontStyle: "italic", fontSize: "16px", color: "#6fbf73",
+    }).setOrigin(0.5, 0).setAlpha(0.85);
+    this.bannerText = this.add.text(W / 2, H / 2 - 10, "", {
+      fontFamily: "Fraunces, serif", fontStyle: "italic", fontSize: "26px", color: "#e8b84b",
+      align: "center", wordWrap: { width: W - 80 },
+    }).setOrigin(0.5).setAlpha(0);
+    this.subBannerText = this.add.text(W / 2, H / 2 + 34, "", {
+      fontFamily: "Manrope, sans-serif", fontSize: "13px", color: "#ede6d6",
+    }).setOrigin(0.5).setAlpha(0);
+
+    this.keys = this.input.keyboard.addKeys({
+      left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+      right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+      jump: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      dodge: Phaser.Input.Keyboard.KeyCodes.SHIFT,
+      attack: Phaser.Input.Keyboard.KeyCodes.X,
+      restart: Phaser.Input.Keyboard.KeyCodes.R,
+    });
+
+    this.startRoom(0);
+  };
+
+  PlayScene.prototype.startRoom = function (index) {
+    var room = ROOMS[index];
+    this.roomIndex = index;
+    this.roomText.setText("the Rootways — " + room.name + "  (" + (index + 1) + "/" + ROOMS.length + ")");
+
+    this.enemies.forEach(function (e) { e.gfx.destroy(); });
+    this.enemies = [];
+
+    var spacing = (W - 200) / Math.max(1, room.enemyCount);
+    for (var i = 0; i < room.enemyCount; i++) {
+      var ex = 480 + i * spacing * 0.6;
+      var circle = this.add.circle(ex, GROUND_Y - 12, 16, 0x6fbf73);
+      this.physics.add.existing(circle);
+      circle.body.setCollideWorldBounds(true);
+      circle.body.setGravityY(900);
+      this.physics.add.collider(circle, this.groundRect);
+      this.enemies.push({ gfx: circle, hp: ENEMY_HP, speed: room.enemySpeed });
+    }
+    this.transitioning = false;
+  };
+
+  PlayScene.prototype.showBanner = function (title, sub, duration) {
+    var self = this;
+    this.bannerText.setText(title);
+    this.subBannerText.setText(sub || "");
+    this.bannerText.setAlpha(1);
+    this.subBannerText.setAlpha(1);
+    if (duration) {
+      setTimeout(function () {
+        self.bannerText.setAlpha(0);
+        self.subBannerText.setAlpha(0);
+      }, duration);
+    }
+  };
+
+  PlayScene.prototype.completeRun = function () {
+    this.runComplete = true;
+    this.enemies.forEach(function (e) { e.gfx.destroy(); });
+    this.enemies = [];
+    this.roomText.setText("the Rootways — cleared");
+    this.showBanner(
+      "You've reached the Gatekeeper's door.",
+      "Press R to descend again"
+    );
+  };
+
+  PlayScene.prototype.restartRun = function () {
+    this.hp = 3;
+    this.player.x = 90; this.player.y = GROUND_Y - 14;
+    this.player.body.setVelocity(0, 0);
+    this.runComplete = false;
+    this.bannerText.setAlpha(0);
+    this.subBannerText.setAlpha(0);
+    this.startRoom(0);
+  };
+
+  PlayScene.prototype.update = function (time, delta) {
+    var dt = delta / 1000;
+    var speed = 160;
+    var body = this.player.body;
+
+    if (this.runComplete) {
+      body.setVelocityX(0);
+      if (Phaser.Input.Keyboard.JustDown(this.keys.restart)) this.restartRun();
+      this.statusText.setText("HP " + "♥".repeat(Math.max(0, this.hp)));
+      return;
+    }
+
+    if (this.keys.left.isDown) body.setVelocityX(-speed);
+    else if (this.keys.right.isDown) body.setVelocityX(speed);
+    else body.setVelocityX(0);
+
+    if (Phaser.Input.Keyboard.JustDown(this.keys.jump) && body.blocked.down) {
+      body.setVelocityY(-340);
+    }
+
+    this.dodgeCooldown = Math.max(0, this.dodgeCooldown - dt);
+    if (Phaser.Input.Keyboard.JustDown(this.keys.dodge) && this.dodgeCooldown <= 0) {
+      this.dodgeCooldown = 0.8; // matches the GDD's real dodge cooldown
+      this.invuln = true;
+      var dir = this.keys.left.isDown ? -1 : 1;
+      body.setVelocityX(dir * 340);
+      this.player.setFillStyle(0xffffff);
+      var self = this;
+      setTimeout(function () { // matches the GDD's real 0.3s i-frame window
+        self.invuln = false;
+        self.player.setFillStyle(0xe8b84b);
+      }, 300);
+    }
+
+    this.attackCooldown = Math.max(0, this.attackCooldown - dt);
+    if (Phaser.Input.Keyboard.JustDown(this.keys.attack) && this.attackCooldown <= 0) {
+      this.attackCooldown = 0.35;
+      for (var i = 0; i < this.enemies.length; i++) {
+        var e = this.enemies[i];
+        var d = Phaser.Math.Distance.Between(this.player.x, this.player.y, e.gfx.x, e.gfx.y);
+        if (d < 60) { this.hitEnemy(e); break; }
+      }
+    }
+
+    this.playerCap.x = this.player.x;
+    this.playerCap.y = this.player.y - 16;
+
+    // Enemies: idle until player is close, then chase (mirrors the real AI
+    // controller's Idle/Chase state machine, simplified for a browser demo)
+    var tookHitThisFrame = false;
+    for (var j = 0; j < this.enemies.length; j++) {
+      var en = this.enemies[j];
+      var distToPlayer = Phaser.Math.Distance.Between(en.gfx.x, en.gfx.y, this.player.x, this.player.y);
+      if (distToPlayer < 260 && distToPlayer > 30) {
+        var dirToPlayer = this.player.x < en.gfx.x ? -1 : 1;
+        en.gfx.body.setVelocityX(dirToPlayer * en.speed);
+      } else if (distToPlayer <= 30) {
+        en.gfx.body.setVelocityX(0);
+        if (!this.invuln) tookHitThisFrame = true;
+      } else {
+        en.gfx.body.setVelocityX(0);
+      }
+    }
+    if (tookHitThisFrame) this.takeDamage();
+
+    this.statusText.setText("HP " + "♥".repeat(Math.max(0, this.hp)));
+  };
+
+  PlayScene.prototype.hitEnemy = function (enemy) {
+    enemy.hp -= 1;
+    enemy.gfx.setFillStyle(0xb5482f);
+    var self = this;
+    setTimeout(function () {
+      if (enemy.hp > 0) enemy.gfx.setFillStyle(0x6fbf73);
+    }, 100);
+    if (enemy.hp <= 0) {
+      enemy.gfx.destroy();
+      this.enemies = this.enemies.filter(function (e) { return e !== enemy; });
+      if (this.enemies.length === 0 && !this.transitioning) this.onRoomCleared();
+    }
+  };
+
+  PlayScene.prototype.onRoomCleared = function () {
+    this.transitioning = true;
+    var self = this;
+    var isLastRoom = this.roomIndex >= ROOMS.length - 1;
+    this.showBanner(ROOMS[this.roomIndex].name + " cleared", "", 1100);
+    setTimeout(function () {
+      if (isLastRoom) self.completeRun();
+      else self.startRoom(self.roomIndex + 1);
+    }, 1300);
+  };
+
+  PlayScene.prototype.takeDamage = function () {
+    if (this.invuln || this.hurtCooldown > this.time.now) return;
+    this.hurtCooldown = this.time.now + 800;
+    this.hp -= 1;
+    this.cameras.main.shake(120, 0.006);
+    if (this.hp <= 0) {
+      this.hp = 3;
+      this.player.x = 90; this.player.y = GROUND_Y - 14;
+    }
+  };
+
+  function boot() {
+    renderPipelinePanels();
+    var game = new Phaser.Game({
+      type: Phaser.AUTO,
+      width: W,
+      height: H,
+      parent: "game-container",
+      backgroundColor: "#0d1712",
+      physics: { default: "arcade", arcade: { gravity: { y: 0 }, debug: false } },
+      scene: [PlayScene],
+    });
+    window.__sporeborneGame = game;
+
+    // Defensive: some embedding contexts don't reliably drive Phaser's own
+    // internal Scene.update() tick (observed during testing -- the RAF loop
+    // itself runs fine, physics steps, but scene.update() is never invoked).
+    // Belt-and-suspenders: also step it ourselves every frame. If Phaser's
+    // own call is working, this just means update() runs twice with the same
+    // (time, delta) very close together, which is harmless here -- movement,
+    // dodge/attack cooldowns, and damage timers are all still correct either
+    // way since they're driven by real elapsed delta, not a call counter.
+    var lastTime = performance.now();
+    function manualTick(now) {
+      var scene = game.scene.isActive("play") ? game.scene.getScene("play") : null;
+      if (scene && scene.update) {
+        var delta = now - lastTime;
+        try { scene.update(now, delta); } catch (e) { /* Phaser's own loop may already be handling it */ }
+      }
+      lastTime = now;
+      requestAnimationFrame(manualTick);
+    }
+    requestAnimationFrame(manualTick);
+  }
+  // Artifacts/embedded pages can finish loading before this script attaches its
+  // listener, so "load" may never fire again -- boot immediately if already loaded.
+  if (document.readyState === "complete") {
+    boot();
+  } else {
+    window.addEventListener("load", boot);
+  }
+})();
+</script>

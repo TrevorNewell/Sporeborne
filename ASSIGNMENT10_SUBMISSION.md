@@ -14,10 +14,15 @@ trail her grandmother left behind and never returned from.
 
 **Playable Game Link:** https://claude.ai/code/artifact/3562bd96-0f71-43cd-b72f-de6cc6f22d63
 
-A browser-playable slice (movement, jump, dodge-with-i-frames, attack, one chasing
-enemy) built as a fallback once packaging Unreal for a downloadable build proved
-too slow to finish in time — no engine, no install, opens and plays immediately.
-It displays the same real pipeline-generated content described in Deliverable 2
+A browser-playable slice built as a fallback once packaging Unreal for a
+downloadable build proved too slow to finish in time — no engine, no install,
+opens and plays immediately. A real loop: three rooms (Mossy Antechamber →
+Spore Causeway → Root Gauntlet, the same three rooms the capstone's Unreal room
+sequencer uses), each with enemies to clear before advancing; reaching the
+third room's clear triggers a "You've reached the Gatekeeper's door" completion
+state, restartable with R. Movement, jump, dodge-with-i-frames (0.3s/0.8s
+cooldown, matching the GDD), and a 2-hit-to-defeat attack are all playable. It
+displays the same real pipeline-generated content described in Deliverable 2
 directly on the page. **⚠️ Before submitting: this link must be shared from its
 page's share menu — Artifacts are private by default, and a grader opening a
 private link will hit a login wall.**
